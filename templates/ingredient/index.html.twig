@@ -31,14 +31,13 @@
         {# ! Utilisation de pagination voir doc ou ligne de com composer require knplabs/knp-paginator-bundle #}
        </tr>
     {% endfor %}
-    
   </tbody>
 </table>
-        <div class="navigation d-flex justify-content-center mt-4">
-            {{ knp_pagination_render(ingredients) }}
-        </div>
+    <div class="navigation d-flex justify-content-center mt-4">
+        {{ knp_pagination_render(ingredients) }}
+    </div>
         {% else %}
-    <h6> Il n'y a pas d'ingredients </h6>
+<h6> Il n'y a pas d'ingredients </h6>
     {% endif %}
 </div>
 {% endblock %}
