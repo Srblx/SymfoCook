@@ -3,18 +3,36 @@
 {% block title %}SymRecipe Ingredient{% endblock %}
 
 {% block body %}
-<div class="container"> 
+<div class="container mt-4"> 
 <h1> Mes ingrédients </h1>
-
-{% for ingredient in ingredients %}
-
-<div> 
-<p>
-{{ ingredient.name }}
-</p>
+<div class="count d-flex justify-content-center m-2">
+   <h6>Il y a {{ ingredients.getTotalItemCount }} ingrédients au total</h6>
 </div>
-    
-{% endfor %} 
 
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Numéro</th>
+      <th scope="col">Nom</th>
+      <th scope="col">Prix</th>
+      <th scope="col">Date de création</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for ingredient in ingredients %}
+       <tr class="table-primary">
+        <th scope="row">Primary</th>
+        <td>{{ ingredient.name }}</td>
+        <td>{{ ingredient.price }}</td>
+        {# ^ |date permet d'afficher l'object php car pas interpreté au format int ou string donc impossible a affciher #}
+        <td>{{ ingredient.createdAt|date('d/m/Y') }}</td>
+        {# ! Utilisation de pagination voir doc ou ligne de com composer require knplabs/knp-paginator-bundle #}
+       </tr>
+    {% endfor %}
+  </tbody>
+</table>
+        <div class="navigation d-flex justify-content-center mt-4">
+            {{ knp_pagination_render(ingredients) }}
+        </div>
 </div>
 {% endblock %}
