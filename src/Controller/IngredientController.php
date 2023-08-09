@@ -11,7 +11,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class IngredientController extends AbstractController
 {
-    #[Route('/ingredient', name: 'app_ingredient')]
+    /**
+      * Undocumented function
+      * this function display all ingredients
+      *
+      * @param IngredientRepository $repository
+      * @param PaginatorInterface $paginator
+      * @param Request $request
+      * @return Response
+    */
+
+    #[Route('/ingredient', name: 'app_ingredient', methods: ['GET'])]
     // ^ IngredientRepository est une injection de dependance injecter le service dans les paramettre du controller
     public function index(IngredientRepository $repository, PaginatorInterface $paginator, Request $request): Response
     {
