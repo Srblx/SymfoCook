@@ -1,51 +1,62 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}SymRecipe Ingredient{% endblock %}
-
+{% block title %}SymRecipe - Mes ingrédients
+{% endblock %}
 {% block body %}
-<div class="container mt-4"> 
-{% if not ingredients.items is same as([]) %}
- 
-<h1> Mes ingrédients </h1>
-<div class="count d-flex justify-content-center m-2">
-   <h6>Il y a {{ ingredients.getTotalItemCount }} ingrédients au total</h6>
-</div>
-<a href="{{ path('ingredient.new') }}" class="btn btn-primary m-4 d-flex justify-content-center">
-Créer un ingredient
-</a>
-
-{% for message in app.session.flashBag.get('success') %}
-  <div class="alert alert-success mt-4">
-    {{ message }}
-  </div> 
-{% endfor %}
-<table class="table table-hover">
-  <thead>
-    <tr>
-      <th scope="col">Numéro</th>
-      <th scope="col">Nom</th>
-      <th scope="col">Prix</th>
-      <th scope="col">Date de création</th>
-    </tr>
-  </thead>
-  <tbody>
-  {% for ingredient in ingredients %}
-       <tr class="table-primary">
-        <th scope="row">{{ ingredient.id }}</th>
-        <td>{{ ingredient.name }}</td>
-        <td>{{ ingredient.price }}</td>
-        {# ^ |date permet d'afficher l'object php car pas interpreté au format int ou string donc impossible a affciher #}
-        <td>{{ ingredient.createdAt|date('d/m/Y') }}</td>
-        {# ! Utilisation de pagination voir doc ou ligne de com composer require knplabs/knp-paginator-bundle #}
-       </tr>
-    {% endfor %}
-  </tbody>
-</table>
-    <div class="navigation d-flex justify-content-center mt-4">
-        {{ knp_pagination_render(ingredients) }}
-    </div>
-        {% else %}
-<h6> Il n'y a pas d'ingredients </h6>
-    {% endif %}
-</div>
+	<div class="container mt-4">
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success mt-4">
+				{{ message }}
+			</div>
+		{% endfor %}
+		{% if not ingredients.items is same as([]) %}
+			<h1>Mes ingrédients</h1>
+			<a href="{{ path('ingredient.new') }}" class="btn btn-primary">
+				Créer un ingrédient
+			</a>
+			<div class="count mt-4">Il y a
+				{{ ingredients.getTotalItemCount }}
+				ingrédient(s)
+			</div>
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th scope="col">Numéro</th>
+						<th scope="col">Nom</th>
+						<th scope="col">Prix</th>
+						<th scope="col">Date de création</th>
+						<th scope="col">Edition</th>
+						<th scope="col">Suppresion</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for ingredient in ingredients %}
+						<tr class="table-primary">
+							<th scope="row">{{ ingredient.id }}</th>
+							<td>{{ ingredient.name }}</td>
+							<td>{{ ingredient.price|number_format(2, '.', ',') }}
+								€</td>
+							<td>{{ ingredient.createdAt|date('d/m/Y') }}</td>
+							<td>
+								<a href="{{ path('ingredient.edit', { id: ingredient.id }) }}" class="btn btn-info">Modifier</a>
+							</td>
+							<td>
+							<form action="{{ path('ingredient.delete', { id: ingredient.id }) }}" method="post" onsubmit="return confirm('Voulez-vous vraiment supprimer cet ingrédient ?');">
+    <input type="hidden" name="_method" value="DELETE">
+    <button type="submit" class="btn btn-danger">Supprimer</button>
+</form>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			<div class="navigation d-flex justify-content-center mt-4">
+				{{ knp_pagination_render(ingredients) }}
+			</div>
+		{% else %}
+			<h4>Il n'y a pas d'ingrédients</h4>
+			<a href="{{ path('ingredient.new') }}" class="btn btn-primary">
+				Créer un ingrédient
+			</a>
+		{% endif %}
+	</div>
 {% endblock %}

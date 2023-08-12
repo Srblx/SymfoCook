@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Controller;
-use App\Entity\Ingredient;
+
 use Doctrine\ORM\Mapping as ORM;
 use App\Form\IngredientType;
+use Doctrine\ORM\EntityManager;
 use App\Repository\IngredientRepository;
+use App\Entity\Ingredient;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,7 +89,7 @@ class IngredientController extends AbstractController
         $ingredient = $repository->find($id);
     
         if (!$ingredient) {
-            throw $this->createNotFoundException('Ingredient not found');
+            throw $this->createNotFoundException('L\'ingredient n\'éxiste pas');
         }
     
         $form = $this->createForm(IngredientType::class, $ingredient);
@@ -109,6 +111,41 @@ class IngredientController extends AbstractController
         ]);
     }
 
-    // public function 
+    #[Route('/ingredient/suppression/{id}', 'ingredient.delete', methods: ['POST'])]
+    public function delete(Ingredient $ingredient, EntityManagerInterface $manager): Response
 
+    {
+        $manager->remove($ingredient);
+        $manager->flush();
+
+        $this->addFlash(
+            'success',
+            'Votre ingrédient a été supprimé avec succès !'
+        );
+
+        return $this->redirectToRoute('ingredient.index');
+    }
+
+    // #[Route('/ingredient/suppression/{id}', 'ingredient.delete', methods: ['GET'])]
+    // public function delete(EntityManagerInterface $manager, Ingredient $ingredient): Response 
+    // {
+    //     if(!$ingredient){
+    //         $this->addFlash(
+    //             'success',
+    //             'L\'ingrédient en question n\'a pas été trouové !'
+    //         );
+            
+    //         return $this->redirectToRoute('ingredient.index');
+    //     }
+       
+    //     $manager->remove($ingredient);
+    //     $manager->flush();
+    
+    //     $this->addFlash(
+    //         'success',
+    //         'Votre ingrédient a été supprimé avec succès !'
+    //     );
+    
+    //     return $this->redirectToRoute('ingredient.index');
+    // }
 }
