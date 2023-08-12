@@ -10,7 +10,15 @@
 <div class="count d-flex justify-content-center m-2">
    <h6>Il y a {{ ingredients.getTotalItemCount }} ingrédients au total</h6>
 </div>
+<a href="{{ path('ingredient.new') }}" class="btn btn-primary m-4 d-flex justify-content-center">
+Créer un ingredient
+</a>
 
+{% for message in app.session.flashBag.get('success') %}
+  <div class="alert alert-success mt-4">
+    {{ message }}
+  </div> 
+{% endfor %}
 <table class="table table-hover">
   <thead>
     <tr>
@@ -23,7 +31,7 @@
   <tbody>
   {% for ingredient in ingredients %}
        <tr class="table-primary">
-        <th scope="row">Primary</th>
+        <th scope="row">{{ ingredient.id }}</th>
         <td>{{ ingredient.name }}</td>
         <td>{{ ingredient.price }}</td>
         {# ^ |date permet d'afficher l'object php car pas interpreté au format int ou string donc impossible a affciher #}
